@@ -6,17 +6,33 @@ import webbrowser
 import os
 import smtplib
 import pyowm
-
+import random
 
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[0].id)
 
-
 def speak(audio):
     engine.say(audio)
     engine.runAndWait()
+
+def song():
+    speak("what would you like to listen sir?")
+    q = takeCommand()
+    if q == "anything":
+        song = os.listdir('E:/Music')
+        os.startfile('E:/Music/'+song[random.randint(1,301)]+'')
+    else:
+        try:
+            os.startfile('E:/Music/'+q+'.mp3')
+        except:
+            speak("song not present would you ike to listen to some other song?")
+            a = takeCommand()
+            if a == 'yes' or 'sure':
+                song()
+            elif a == 'no' or 'maybe next time':
+                pass
 
 
 def welcomeMessage():
@@ -59,6 +75,7 @@ def sendEmail(to, content):
     server.sendmail('akki0510@gmail.com', to, content)
     server.close()
 
+
 if __name__ == "__main__":
     welcomeMessage()
     while True:
@@ -94,14 +111,12 @@ if __name__ == "__main__":
             webbrowser.open( "https://www.google.com/search?source=hp&ei=CRzyXaPcG_fXz7sP3e6-uAc&q="+q)
 
         elif 'play music' in query:
-            music_dir = 'C:\\Users\\aksha\\Music\\fav'
-            songs = os.listdir(music_dir)
-            print(songs)
-            os.startfile(os.path.join(music_dir, songs[0]))
+            song()
 
         elif 'the time' in query:
             strTime = datetime.datetime.now().strftime("%H:%M:%S")
             speak(f"Sir, the time is {strTime}")
+            print(strTime)
 
         elif 'send a mail' in query:
             try:
